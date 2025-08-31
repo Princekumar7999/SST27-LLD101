@@ -1,5 +1,3 @@
-interface Machine {
-    void print(String text);
-    void scan(String dstPath);
-    void fax(String number);
+public interface Machine extends Printer, Scanner, FaxMachine {
+    // This interface now only combines capabilities without forcing implementation
 }

@@ -1,13 +1,17 @@
 public class OrderService {
-    double taxRate = 0.18;
-    EmailClient email = new EmailClient();
-
-    double totalWithTax(double subtotal) {
-        return subtotal + subtotal * taxRate;
+    private final TaxCalculator taxCalculator;
+    private final EmailService emailService;
+    private final OrderRepository orderRepository;
+    
+    public OrderService(TaxCalculator taxCalculator, EmailService emailService, OrderRepository orderRepository) {
+        this.taxCalculator = taxCalculator;
+        this.emailService = emailService;
+        this.orderRepository = orderRepository;
     }
-    void checkout(String customerEmail, double subtotal) {
-        double total = totalWithTax(subtotal);
-        email.send(customerEmail, "Thanks! Your total is " + total);
-        System.out.println("Order stored (pretend DB).");
+    
+    public void checkout(String customerEmail, double subtotal) {
+        double total = taxCalculator.calculateTotalWithTax(subtotal);
+        emailService.send(customerEmail, "Thanks! Your total is " + total);
+        orderRepository.save(customerEmail, total);
     }
 }
